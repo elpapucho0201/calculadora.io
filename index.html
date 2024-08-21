@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora con Exportación a Excel</title>
+    <link rel="icon" href="https://th.bing.com/th/id/OIP.qsNtPHMcga070N5vHbMOvAHaHa?rs=1&pid=ImgDetMain" type="image/x-icon">
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f4f4f4;
+            box-sizing: border-box;
+        }
+
+        .calculadora {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 600px;
+            margin: 20px;
+            box-sizing: border-box;
+        }
+
+        h1, h2 {
+            text-align: center;
+            color: #333;
+            margin: 0 0 20px 0;
+        }
+
+        label {
+            font-weight: bold;
+            display: block;
+            margin-top: 10px;
+            color: #555;
+        }
+
+        input[type="text"], input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #28a745;
+            border: none;
+            border-radius: 5px;
+            color: #fff;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-bottom: 10px;
+            box-sizing: border-box;
+        }
+
+        button:hover {
+            background-color: #218838;
+        }
+
+        table {
+            width: 100%;
+            margin-top: 20px;
+            border-collapse: collapse;
+            word-wrap: break-word;
+            table-layout: fixed;
+        }
+
+        table, th, td {
+            border: 1px solid #ddd;
+            text-align: center;
+        }
+
+        th, td {
+            padding: 8px;
+        }
+
+        th {
+            background-color: #007bff;
+            color: white;
+        }
+
+        /* Media Queries for Responsiveness */
+        @media (max-width: 768px) {
+            .calculadora {
+                padding: 15px;
+                max-width: 100%;
+            }
+
+            button {
+                font-size: 14px;
+                padding: 8px;
+            }
+
+            input[type="text"], input[type="number"] {
+                font-size: 14px;
+                padding: 8px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1, h2 {
+                font-size: 20px;
+            }
+
+            label {
+                font-size: 14px;
+            }
+
+            input[type="text"], input[type="number"] {
+                font-size: 12px;
+            }
+
+            button {
+                font-size: 12px;
+                padding: 6px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="calculadora">
+        <h1>Calculadora</h1>
+
+        <label for="id">Ingresa un ID:</label>
+        <input type="text" id="id">
+
+        <label for="cantidad">Ingresa la cantidad:</label>
+        <input type="number" id="cantidad" step="any">
+
+        <label for="id2">ID del 2%:</label>
+        <input type="text" id="id2">
+
+        <label for="id74">ID del 74%:</label>
+        <input type="text" id="id74">
+
+        <label for="id20">ID del 20%:</label>
+        <input type="text" id="id20">
+
+        <label for="id6">ID del 6%:</label>
+        <input type="text" id="id6">
+
+        <button onclick="calcular()">Calcular</button>
+        <button onclick="exportarTabla()">Exportar a Excel</button>
+
+        <h2>Resultados Guardados:</h2>
+        <table id="tablaResultados">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Cantidad Inicial</th>
+                    <th>ID del 2%</th>
+                    <th>Resultado 2%</th>
+                    <th>ID del 74%</th>
+                    <th>Resultado 74%</th>
+                    <th>ID del 20%</th>
+                    <th>Resultado 20%</th>
+                    <th>ID del 6%</th>
+                    <th>Resultado 6%</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Filas de resultados -->
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Incluir la biblioteca SheetJS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
+
+    <script>
+        function calcular() {
+            let id = document.getElementById('id').value;
+            let cantidad = parseFloat(document.getElementById('cantidad').value);
+
+            let id2 = document.getElementById('id2').value;
+            let id74 = document.getElementById('id74').value;
+            let id20 = document.getElementById('id20').value;
+            let id6 = document.getElementById('id6').value;
+
+            // Realizar los cálculos
+            let resultado1 = cantidad * 0.02;
+            let resultado2 = cantidad - resultado1;
+            let resultado3 = resultado2 * 0.74;
+            let resultado4 = resultado2 * 0.20;
+            let resultado5 = resultado2 * 0.06;
+
+            // Crear una nueva fila para la tabla con los datos de IDs y cantidad inicial junto con los resultados
+            let tabla = document.getElementById('tablaResultados').getElementsByTagName('tbody')[0];
+            let fila = tabla.insertRow();
+
+            // Crear celdas para la fila de resultados
+            let celdaID = fila.insertCell(0);
+            let celdaCantidad = fila.insertCell(1);
+            let celdaID2 = fila.insertCell(2);
+            let celdaResultado2 = fila.insertCell(3);
+            let celdaID74 = fila.insertCell(4);
+            let celdaResultado74 = fila.insertCell(5);
+            let celdaID20 = fila.insertCell(6);
+            let celdaResultado20 = fila.insertCell(7);
+            let celdaID6 = fila.insertCell(8);
+            let celdaResultado6 = fila.insertCell(9);
+
+            // Asignar valores a las celdas
+            celdaID.innerHTML = id;
+            celdaCantidad.innerHTML = cantidad.toFixed(2);
+            celdaID2.innerHTML = id2;
+            celdaResultado2.innerHTML = resultado1.toFixed(2);
+            celdaID74.innerHTML = id74;
+            celdaResultado74.innerHTML = resultado3.toFixed(2);
+            celdaID20.innerHTML = id20;
+            celdaResultado20.innerHTML = resultado4.toFixed(2);
+            celdaID6.innerHTML = id6;
+            celdaResultado6.innerHTML = resultado5.toFixed(2);
+        }
+
+        function exportarTabla() {
+            // Obtener la tabla
+            let tabla = document.getElementById("tablaResultados");
+            
+            // Convertir tabla a hoja de Excel usando SheetJS
+            let wb = XLSX.utils.table_to_book(tabla, {sheet: "Resultados"});
+            
+            // Exportar archivo Excel
+            XLSX.writeFile(wb, "resultados.xlsx");
+        }
+    </script>
+</body>
+</html>
